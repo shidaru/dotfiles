@@ -1,0 +1,5 @@
+rope
+jedi
+autopep8
+flake8
+virtualenv

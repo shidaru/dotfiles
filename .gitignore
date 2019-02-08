@@ -1,0 +1,20 @@
+# -*- mode: gitignore; -*-
+*~
+\#*\#
+*.elc
+auto-save-list/
+tramp
+.\#*
+recentf
+elisp/
+elpa/
+themes/
+undohist/
+snippets/
+use-package/
+ac-comphist.dat
+.zsh_history
+.emacs.d/url/
+!.gitkeep
+proxy.txt
+kkcrc
