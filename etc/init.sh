@@ -3,7 +3,7 @@
 env=$(uname -a)
 
 if [[ $env =~ "Microsoft" ]]; then
-    eval "./wls.sh"
+    eval "./etc/wls.sh"
 elif [[ $env =~ "Linux" ]]; then
-    eval "./linux.sh"
+    eval "./etc/linux.sh"
 fi

@@ -17,10 +17,12 @@ packagelist=(
 
 sudo apt update
 
+sudo apt build-dep -y linux
+
 echo "Start install apps."
 for list in ${packagelist[@]}; do
   sudo apt install -y ${list}
 done
 
 # Docker環境
-eval ./docker.sh
+eval ./etc/docker.sh
