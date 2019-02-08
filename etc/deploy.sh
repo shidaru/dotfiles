@@ -2,7 +2,7 @@
 # ドットファイルのシンボリックリンクを貼る
 
 for file in `ls -d .[^.]*`; do
-  if [ ! $file = ".gitignore" ]; then
+  if [ ! $file = ".gitignore" -o ! $file = ".git" ]; then
     ln -sfnv ./.dotfiles/$file $HOME/$file
   fi
 done

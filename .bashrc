@@ -64,13 +64,13 @@ fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
+# case "$TERM" in
+# xterm*|rxvt*)
+#     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+#     ;;
+# *)
+#     ;;
+# esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -179,7 +179,7 @@ function cdl {
 export PATH=$PATH:$HOME/bin/
 
 # prompt
-export PS1='$(git-ps)\n\[\e[1;32m\][\u@\h \w \d]\[\e[m\]\n\\$ '
+export PS1='$(git-ps)\n\[\e[1;32m\]\u\[\e[1;37m\]@\[\e[1;34m\]\h \[\e[1;37m\]\w \d\[\e[m\]\n\\$ '
 
 export GOROOT=$HOME/local/go
 export GOPATH=$HOME/.go
