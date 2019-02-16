@@ -181,11 +181,15 @@ export PATH=$PATH:$HOME/bin/
 # prompt
 export PS1='$(git-ps)\n\[\e[1;32m\]\u\[\e[1;37m\]@\[\e[1;34m\]\h \[\e[1;37m\]\w \d\[\e[m\]\n\\$ '
 
-export GOROOT=$HOME/local/go
+# goenv
+export PATH=$HOME/.goenv/bin:$PATH
+eval "$(goenv init -)"
+#export GOROOT=$HOME/local/go
 export GOPATH=$HOME/.go
 export PATH=$PATH:$GOROOT/bin
 export PATH=$GOPATH/bin:$PATH
 
+#pyenv
 export PYENV_ROOT=$HOME/.pyenv
 export PATH=$PYENV_ROOT/bin:$PATH
 eval "$(pyenv init -)"
