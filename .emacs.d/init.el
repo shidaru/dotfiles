@@ -494,34 +494,15 @@ Otherwise indent whole buffer."
   )
 
 ;; Python
-;; Standard Jedi.el setting
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
-
-(defun my/python-mode-hook ()
-  "Use Company for auto-completion interface."
-  (add-to-list 'company-backends 'company-jedi))
-
-(use-package company-jedi
+(use-package python-mode
   :ensure t
-  :init
-  (add-hook 'python-mode-hook 'my/python-mode-hook))
-
-(use-package elpy
-  :ensure t
-  :defer 2
   :config
-  (define-key python-mode-map (kbd "C-j") nil)
-  (progn
-    ;; Use Flycheck instead of Flymake
-    (when (require 'flycheck nil t)
-      (remove-hook 'elpy-modules 'elpy-module-flymake)
-      (remove-hook 'elpy-modules 'elpy-module-yasnippet)
-      (remove-hook 'elpy-mode-hook 'elpy-module-highlight-indentation)
-      (add-hook 'elpy-mode-hook 'flycheck-mode))
-    (elpy-enable)
-    ;; jedi is great
-    (setq elpy-rpc-backend "jedi")))
+  (use-package py-yapf
+    :ensure t
+    :config
+    (add-hook 'python-mode-hook 'py-yapf-enable-on-save)
+    )
+  )
 
 ;; TeX
 (use-package yatex
@@ -803,7 +784,7 @@ Otherwise indent whole buffer."
      ivy--highlight-default-migemo ivy-occur-revert-buffer-migemo ivy-occur-press-migemo avy-migemo-goto-char avy-migemo-goto-char-2 avy-migemo-goto-char-in-line avy-migemo-goto-char-timer avy-migemo-goto-subword-1 avy-migemo-goto-word-1 avy-migemo-isearch avy-migemo-org-goto-heading-timer avy-migemo--overlay-at avy-migemo--overlay-at-full)))
  '(package-selected-packages
    (quote
-    (go-eldoc company-go go-mode yatex yasnippet-snippets yaml-mode web-mode undohist undo-tree swiper rainbow-delimiters python-mode php-mode open-junk-file nlinum neotree mwim mozc lsp-ui lsp-python latex-math-preview ivy-yasnippet google-translate flycheck expand-region exec-path-from-shell elpy dumb-jump dockerfile-mode disable-mouse diminish company-lsp company-jedi comment-dwim-2 avy-migemo anzu))))
+    (py-yapf go-eldoc company-go go-mode yatex yasnippet-snippets yaml-mode web-mode undohist undo-tree swiper rainbow-delimiters python-mode php-mode open-junk-file nlinum neotree mwim mozc lsp-ui lsp-python latex-math-preview ivy-yasnippet google-translate flycheck expand-region exec-path-from-shell elpy dumb-jump dockerfile-mode disable-mouse diminish company-lsp company-jedi comment-dwim-2 avy-migemo anzu))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
