@@ -101,10 +101,10 @@ function unset_proxy() {
   rm -f ~/.wgetrc
 }
 
-if [ $1 = "s" ]; then
+if [ "$1" = "s" ]; then
   echo "SET PROXY"
   set_proxy IS_AUTH
-elif [ $1 = "u" ]; then
+elif [ "$1" = "u" ]; then
   echo "UNSET PROXY"
   unset_proxy
 else
