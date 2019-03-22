@@ -497,11 +497,13 @@ Otherwise indent whole buffer."
 (use-package python-mode
   :ensure t
   :config
-  (use-package py-yapf
-    :ensure t
-    :config
-    (add-hook 'python-mode-hook 'py-yapf-enable-on-save)
-    )
+  (define-key python-mode-map (kbd "C-j") nil)
+  ;; (use-package py-yapf
+  ;;   :ensure t
+  ;;   :disabled
+  ;;   :config
+  ;;   (add-hook 'python-mode-hook 'py-yapf-enable-on-save)
+  ;;   )
   )
 
 ;; TeX
