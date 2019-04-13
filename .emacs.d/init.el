@@ -230,16 +230,6 @@ PATHS is you want to include."
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
   (rainbow-delimiters-mode 1)
   (setq rainbow-delimiters-outermost-only-face-count 1)
-  ;; 色を変更
-  (set-face-foreground 'rainbow-delimiters-depth-1-face "#9a4040")
-  (set-face-foreground 'rainbow-delimiters-depth-2-face "#ff5e5e")
-  (set-face-foreground 'rainbow-delimiters-depth-3-face "#ffaa77")
-  (set-face-foreground 'rainbow-delimiters-depth-4-face "#dddd77")
-  (set-face-foreground 'rainbow-delimiters-depth-5-face "#80ee80")
-  (set-face-foreground 'rainbow-delimiters-depth-6-face "#66bbff")
-  (set-face-foreground 'rainbow-delimiters-depth-7-face "#da6bda")
-  (set-face-foreground 'rainbow-delimiters-depth-8-face "#afafaf")
-  (set-face-foreground 'rainbow-delimiters-depth-9-face "#f0f0f0")
   )
 
 ;; 履歴
@@ -309,6 +299,10 @@ PATHS is you want to include."
   (setq ivy-re-builders-alist
 	'((t . ivy--regex-plus)))
 
+  (use-package ivy-rich
+    :config
+    (ivy-rich-mode 1)
+    )
   ;; counsel設定
   (defvar counsel-find-file-ignore-regexp (regexp-opt '("./" "../")))
   (use-package swiper
@@ -327,6 +321,8 @@ PATHS is you want to include."
   (use-package ivy-yasnippet
     :ensure t
     :bind (("C-c y" . ivy-yasnippet))
+    :config
+    (setq ivy-height 30)
     )
   )
 
@@ -364,7 +360,7 @@ PATHS is you want to include."
 ;; リージョン指定をしていなければ，バッファ全体を変換対象とする
 
 (defun replace-punctuation (a1 a2 b1 b2)
-  "Replace periods and commas."
+  "Replace periods and commas A1 A2 B1 B2."
   (let ((s1 (if mark-active "選択領域" "バッファ全体"))
         (s2 (concat a2 b2))
         (b (if mark-active (region-beginning) (point-min)))
@@ -421,7 +417,6 @@ Otherwise indent whole buffer."
   (global-company-mode)
   (setq company-transformers '(company-sort-by-backend-importance)) ;; ソート順
   (setq company-idle-delay 0) ; 遅延なしにすぐ表示
-  (setq company-minimum-prefix-length 2) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の最後の次は先頭に戻る
   (setq completion-ignore-case t)
   (setq company-dabbrev-downcase nil)
@@ -430,7 +425,6 @@ Otherwise indent whole buffer."
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   (define-key company-active-map [tab] 'company-complete-selection) ;; TABで候補を設定
   (define-key company-active-map (kbd "C-h") nil) ;; C-hはバックスペース割当のため無効化
-  (define-key company-active-map (kbd "C-S-h") 'company-show-doc-buffer) ;; ドキュメント表示はC-Shift-h
 
   ;; 未選択項目
   (set-face-attribute 'company-tooltip nil
@@ -450,15 +444,6 @@ Otherwise indent whole buffer."
   ;; スクロールバー背景
   (set-face-attribute 'company-scrollbar-bg nil
                       :background "#002b37")
-  ;; yasnippetとの連携
-  (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-  (defun company-mode/backend-with-yas (backend)
-    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-	backend
-      (append (if (consp backend) backend (list backend))
-	      '(:with company-yasnippet))))
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
   )
 
 ;; 構文チェック
@@ -473,7 +458,12 @@ Otherwise indent whole buffer."
   :ensure t
   :diminish yas-minor-mode
   :bind (:map yas-minor-mode-map
+	      ;; 既存スニペットを挿入する
+	      ("C-x i i" . yas-insert-snippet)
+	      ;; 新規スニペットを作成するバッファを用意する
               ("C-x i n" . yas-new-snippet)
+	      ;; 既存スニペットを閲覧・編集する
+	      ("C-x i v" . yas-visit-snippet-file)
               ("C-x i l" . yas-describe-tables)
               ("C-x i g" . yas-reload-all))
   :config
@@ -481,8 +471,6 @@ Otherwise indent whole buffer."
     :ensure t
     )
   (yas-global-mode 1)
-  ;; (setq yas-snippet-dirs
-  ;; 	'("~/.emacs.d/snippets"))
   )
 
 ;; anzu
@@ -498,12 +486,6 @@ Otherwise indent whole buffer."
   :ensure t
   :config
   (define-key python-mode-map (kbd "C-j") nil)
-  ;; (use-package py-yapf
-  ;;   :ensure t
-  ;;   :disabled
-  ;;   :config
-  ;;   (add-hook 'python-mode-hook 'py-yapf-enable-on-save)
-  ;;   )
   )
 
 ;; TeX
@@ -786,7 +768,7 @@ Otherwise indent whole buffer."
      ivy--highlight-default-migemo ivy-occur-revert-buffer-migemo ivy-occur-press-migemo avy-migemo-goto-char avy-migemo-goto-char-2 avy-migemo-goto-char-in-line avy-migemo-goto-char-timer avy-migemo-goto-subword-1 avy-migemo-goto-word-1 avy-migemo-isearch avy-migemo-org-goto-heading-timer avy-migemo--overlay-at avy-migemo--overlay-at-full)))
  '(package-selected-packages
    (quote
-    (py-yapf go-eldoc company-go go-mode yatex yasnippet-snippets yaml-mode web-mode undohist undo-tree swiper rainbow-delimiters python-mode php-mode open-junk-file nlinum neotree mwim mozc lsp-ui lsp-python latex-math-preview ivy-yasnippet google-translate flycheck expand-region exec-path-from-shell elpy dumb-jump dockerfile-mode disable-mouse diminish company-lsp company-jedi comment-dwim-2 avy-migemo anzu))))
+    (ivy-rich py-yapf go-eldoc company-go go-mode yatex yasnippet-snippets yaml-mode web-mode undohist undo-tree swiper rainbow-delimiters python-mode php-mode open-junk-file nlinum neotree mwim mozc lsp-ui lsp-python latex-math-preview ivy-yasnippet google-translate flycheck expand-region exec-path-from-shell elpy dumb-jump dockerfile-mode disable-mouse diminish company-lsp company-jedi comment-dwim-2 avy-migemo anzu))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
