@@ -107,14 +107,14 @@ PATHS is you want to include."
 
 ;;フォント設定 ===============================================
 (create-fontset-from-ascii-font
- "Ricty Diminished-15.0"
+ "Ricty Diminished-12.0"
  nil
  "ricty")
 
 (set-fontset-font
  "fontset-ricty"
  'unicode
- "Ricty Diminished-15.0"
+ "Ricty Diminished-12.0"
  nil
  'append)
 
@@ -194,6 +194,11 @@ PATHS is you want to include."
 ;; 基本設定終了 ;;;;;
 
 ;; インターフェース設定 ;;;;;
+
+(use-package magit
+  :ensure
+  :bind("C-x g" . magit-status)
+  )
 
 (use-package neotree
   :ensure t
@@ -288,6 +293,14 @@ PATHS is you want to include."
   )
 
 ;; 検索・補完インターフェース
+(defun ivy-rich-switch-buffer-icon (candidate)
+  (with-current-buffer
+      (get-buffer candidate)
+    (let ((icon (all-the-icons-icon-for-mode major-mode)))
+      (if (symbolp icon)
+	  (all-the-icons-icon-for-mode 'fundamental-mode)
+	icon))))
+
 (use-package ivy
   :ensure t
   :config
@@ -302,6 +315,19 @@ PATHS is you want to include."
   (use-package ivy-rich
     :config
     (ivy-rich-mode 1)
+    (setq ivy-rich--display-transformers-list
+	  (plist-put ivy-rich--display-transformers-list
+		     'ivy-switch-buffer
+		     '(:columns
+		       ((ivy-rich-switch-buffer-icon :width "2")
+			(ivy-rich-candidate (:width 30))
+			(ivy-rich-switch-buffer-size (:width 7))
+			(ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+			(ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+			(ivy-rich-switch-buffer-project (:width 15 :face success))
+			(ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+		       :predicate
+		       (lambda (cand) (get-buffer cand)))))
     )
   ;; counsel設定
   (defvar counsel-find-file-ignore-regexp (regexp-opt '("./" "../")))
@@ -321,10 +347,9 @@ PATHS is you want to include."
   (use-package ivy-yasnippet
     :ensure t
     :bind (("C-c y" . ivy-yasnippet))
-    :config
-    (setq ivy-height 30)
     )
   )
+
 
 ;; 使い捨てファイルを開く
 (use-package open-junk-file
@@ -457,15 +482,15 @@ Otherwise indent whole buffer."
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
-  :bind (:map yas-minor-mode-map
-	      ;; 既存スニペットを挿入する
-	      ("C-x i i" . yas-insert-snippet)
-	      ;; 新規スニペットを作成するバッファを用意する
-              ("C-x i n" . yas-new-snippet)
-	      ;; 既存スニペットを閲覧・編集する
-	      ("C-x i v" . yas-visit-snippet-file)
-              ("C-x i l" . yas-describe-tables)
-              ("C-x i g" . yas-reload-all))
+  :bind (
+	 ;; 既存スニペットを挿入する
+	 ("C-x y i" . yas-insert-snippet)
+	 ;; 新規スニペットを作成するバッファを用意する
+	 ("C-x y n" . yas-new-snippet)
+	 ;; 既存スニペットを閲覧・編集する
+	 ("C-x y v" . yas-visit-snippet-file)
+	 ("C-x y l" . yas-describe-tables)
+	 ("C-x y g" . yas-reload-all))
   :config
   (use-package yasnippet-snippets
     :ensure t
@@ -707,12 +732,6 @@ Otherwise indent whole buffer."
   :mode (("\\.yml?\\'" . yaml-mode))
   )
 
-;; php
-(use-package php-mode
-  :ensure t
-  :mode (("\\.php?\\'" . php-mode))
-  )
-
 ;; web全般
 (use-package web-mode
   :ensure t
@@ -753,25 +772,3 @@ Otherwise indent whole buffer."
 (provide 'init)
 
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(avy-migemo-function-names
-   (quote
-    (swiper--add-overlays-migemo
-     (swiper--re-builder :around swiper--re-builder-migemo-around)
-     (ivy--regex :around ivy--regex-migemo-around)
-     (ivy--regex-ignore-order :around ivy--regex-ignore-order-migemo-around)
-     (ivy--regex-plus :around ivy--regex-plus-migemo-around)
-     ivy--highlight-default-migemo ivy-occur-revert-buffer-migemo ivy-occur-press-migemo avy-migemo-goto-char avy-migemo-goto-char-2 avy-migemo-goto-char-in-line avy-migemo-goto-char-timer avy-migemo-goto-subword-1 avy-migemo-goto-word-1 avy-migemo-isearch avy-migemo-org-goto-heading-timer avy-migemo--overlay-at avy-migemo--overlay-at-full)))
- '(package-selected-packages
-   (quote
-    (ivy-rich py-yapf go-eldoc company-go go-mode yatex yasnippet-snippets yaml-mode web-mode undohist undo-tree swiper rainbow-delimiters python-mode php-mode open-junk-file nlinum neotree mwim mozc lsp-ui lsp-python latex-math-preview ivy-yasnippet google-translate flycheck expand-region exec-path-from-shell elpy dumb-jump dockerfile-mode disable-mouse diminish company-lsp company-jedi comment-dwim-2 avy-migemo anzu))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

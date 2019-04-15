@@ -115,6 +115,7 @@ fi
 # alias
 alias la="ls -a"
 alias ll="ls -al"
+alias ..="cd .."
 
 function cd {
   if [ -z "$1" ]; then
@@ -179,7 +180,14 @@ function cdl {
 export PATH=$PATH:$HOME/bin/
 
 # prompt
-export PS1='$(git-ps)\n\[\e[1;32m\]\u\[\e[1;37m\]@\[\e[1;34m\]\h \[\e[1;37m\]\w \d\[\e[m\]\n\\$ '
+# export PS1='$(git-ps)\n\[\e[1;32m\]\u\[\e[1;37m\]@\[\e[1;34m\]\h \[\e[1;37m\]\w \d\[\e[m\]\n\\$ '
+# Git
+if [ -f $HOME/bin/git-completion.bash -a -f $HOME/bin/git-prompt.sh ]; then
+  source $HOME/bin/git-completion.bash
+  GIT_PS1_SHOWDIRTYSTATE=1
+  source $HOME/bin/git-prompt.sh
+  PS1='\[\e[1;32m\]\u\[\e[1;37m\]@\[\e[1;34m\]\h \[\e[1;37m\]\w$(__git_ps1 " (%s)")\n\\$ '
+fi
 
 # goenv
 export PATH=$HOME/.goenv/bin:$PATH
