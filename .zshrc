@@ -92,6 +92,13 @@ alias cdh='cdr -l'
 alias setproxy='source proxy.sh s'
 alias unsetproxy='source proxy.sh u'
 
+function ktc() {
+    before=$1
+    after=`echo $1 | rev | cut -c 4- | rev`
+    `kotlinc $before -include-runtime -d $after.jar`
+}
+alias ktc='ktc $1'
+
 function cless() {
 	column -s, -t < $1 | less -#2 -N -S
 }
@@ -115,9 +122,13 @@ export PATH=$GOROOT/bin:$PATH
 
 export BROWSER=$HOME/local/firefox/firefox
 
-#alias emacs="$HOME/local/emacs/bin/emacs"
+alias re="$HOME/local/remacs/bin/remacs"
 #alias emacs="/mnt/d/local/emacs/bin/emacs"
 
 # wsl用Xサーバ設定
 export DISPLAY=:0.0
 export LIBGL_ALWAYS_INDIRECT=1
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/haruka/.sdkman"
+[[ -s "/home/haruka/.sdkman/bin/sdkman-init.sh" ]] && source "/home/haruka/.sdkman/bin/sdkman-init.sh"

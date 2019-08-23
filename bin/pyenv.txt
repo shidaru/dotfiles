@@ -1,0 +1,3 @@
+PR=PYENV_ROOT=$HOME/.pyenv
+PRP=PATH=$PYENV_ROOT/bin:$PATH
+IN="$(pyenv init -)"
