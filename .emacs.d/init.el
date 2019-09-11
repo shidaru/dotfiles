@@ -33,10 +33,10 @@
 
 ;; theme
 (straight-use-package
- '(organic-green :type git :host github :repo "kostafey/organic-green-theme"))
-(use-package organic-green-theme
+ '(zenburn :type git :host github :repo "bbatsov/zenburn-emacs"))
+(use-package zenburn-theme
   :config
-  (load-theme 'organic-green t))
+  (load-theme 'zenburn t))
 
 ;; ツールバー、メニューバーの非表示
 (tool-bar-mode 0)
@@ -143,11 +143,6 @@
 	    (lambda() (set-cursor-color "black")))
   (global-set-key (kbd "C-j") 'toggle-input-method)
   )
-
-;; abbrev
-;; (setq abbrev-file-name "~/.abbrev_defs")
-;; (setq save-abbrevs t)
-;; (quietly-read-abbrev-file)
 
 ;;
 ;; Commands --
@@ -286,13 +281,6 @@ Otherwise indent whole buffer."
     (setq tramp-remote-process-environment process-environment))
   )
 
-(use-package twittering-mode
-  :config
-  ;; 簡単ログインの設定
-  (setq twittering-allow-insecure-server-cert t)
-  (setq twittering-use-master-password t)
-  )
-
 ;;
 ;; Search & Complete --
 ;;
@@ -344,11 +332,6 @@ Otherwise indent whole buffer."
 (require 'set-pyenv-version-path)
 (add-hook 'find-file-hook 'set-pyenv-version-path)
 (add-to-list 'exec-path "~/.pyenv/shims")
-(use-package python-mode
-  :mode (("\\.py\\'" . python-mode))
-  :config
-  (add-to-list 'interpreter-mode-alist '("python" . python-mode))
-  (define-key python-mode-map (kbd "C-j") nil))
 (use-package python-black
   :demand t
   :after python)
@@ -375,7 +358,7 @@ Otherwise indent whole buffer."
   (("C-c y" . helm-yas-complete))
   :config
   (setq helm-yas-space-match-any-greedy t)
-  (yas-load-directory "~/snippets/"))
+  (yas-load-directory "~/.emacs.d/snippets/"))
 
 (use-package markdown-mode
   :mode (("\\md?\\'" . markdown-mode))
@@ -403,59 +386,11 @@ Otherwise indent whole buffer."
 (use-package yaml-mode
   :mode (("\\.yml?\\'" . yaml-mode)))
 
-
-;; コード補完
-;; (use-package company
-;;   :ensure t
-;;   :diminish
-;;   :config
-;;   (global-company-mode)
-;;   (setq company-transformers '(company-sort-by-backend-importance)) ;; ソート順
-;;   (setq company-idle-delay 0) ; 遅延なしにすぐ表示
-;;   (setq company-selection-wrap-around t) ; 候補の最後の次は先頭に戻る
-;;   (setq completion-ignore-case t)
-;;   (setq company-dabbrev-downcase nil)
-;;   ;; C-n, C-pで補完候補を次/前の候補を選択
-;;   (define-key company-active-map (kbd "C-n") 'company-select-next)
-;;   (define-key company-active-map (kbd "C-p") 'company-select-previous)
-;;   (define-key company-active-map [tab] 'company-complete-selection) ;; TABで候補を設定
-;;   (define-key company-active-map (kbd "C-h") nil) ;; C-hはバックスペース割当のため無効化
-
-;;   ;; 未選択項目
-;;   (set-face-attribute 'company-tooltip nil
-;;                       :foreground "#36c6b0" :background "#244f36")
-;;   ;; 未選択項目&一致文字
-;;   (set-face-attribute 'company-tooltip-common nil
-;;                       :foreground "white" :background "#244f36")
-;;   ;; 選択項目
-;;   (set-face-attribute 'company-tooltip-selection nil
-;;                       :foreground "#a1ffcd" :background "#007771")
-;;   ;; 選択項目&一致文字
-;;   (set-face-attribute 'company-tooltip-common-selection nil
-;;                       :foreground "white" :background "#007771")
-;;   ;; スクロールバー
-;;   (set-face-attribute 'company-scrollbar-fg nil
-;;                       :background "#4cd0c1")
-;;   ;; スクロールバー背景
-;;   (set-face-attribute 'company-scrollbar-bg nil
-;;                       :background "#002b37")
-;;   )
-
-;; ;; 構文チェック
-;; (use-package flycheck
-;;   :ensure t
-;;   :config
-;;   (add-hook 'after-init-hook #'global-flycheck-mode)
-;;   )
-
-
-;; ;; anzu
-;; (use-package anzu
-;;   :ensure t
-;;   :diminish ""
-;;   :config
-;;   (global-anzu-mode +1)
-;;   )
+;; 構文チェック
+(use-package flycheck
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  )
 
 ;; ;; TeX
 ;; (use-package yatex
@@ -474,26 +409,6 @@ Otherwise indent whole buffer."
 ;;   (setq tex-pdfview-command "evince")
 ;;   (setq YaTeX-simple-messages t)
 ;;   (setq YaTeX-skip-default-reader t)
-
-;;   ;; yatex上で数式をプレビューする
-;;   (use-package latex-math-preview
-;;     :ensure t
-;;     )
-;;   (setq latex-math-preview-command-path-alist
-;; 	'((latex . "/usr/bin/uplatex") (dvipng . "/usr/bin/dvipng") (dvips . "/usr/bin/dvips")))
-;;   (autoload 'latex-math-preview-expression "latex-math-preview" nil t)
-;;   (autoload 'latex-math-preview-insert-symbol "latex-math-preview" nil t)
-;;   (autoload 'latex-math-preview-beamer-frame "latex-math-preview" nil t)
-;;   (autoload 'latex-math-preview-save-image-file "latex-math-preview" nil t)
-;;   (add-hook 'yatex-mode-hook
-;; 	    '(lambda ()
-;; 	       (YaTeX-define-key "p" 'latex-math-preview-expression)
-;; 	       (YaTeX-define-key "\C-p" 'latex-math-preview-save-image-file)
-;; 	       (YaTeX-define-key "j" 'latex-math-preview-insert-symbol)
-;; 	       (YaTeX-define-key "\C-j" 'latex-math-preview-last-symbol-again)
-;; 	       (YaTeX-define-key "\C-b" 'latex-math-preview-beamer-frame)))
-;;   (defvar latex-math-preview-in-math-mode-p-func 'YaTeX-in-math-mode-p)
-;;   )
 
 ;; ;; org-mode
 ;; (use-package org
@@ -620,46 +535,23 @@ Otherwise indent whole buffer."
 ;;   )
 
 
-;; ;; Shell Script
-;; (setq sh-basic-offset 2)
-;; (setq sh-indentation 2)
-;; (setq sh-shell-file "/bin/sh")
+;; html, css
+(use-package web-mode
+  :mode (("\\.html?\\'" . web-mode)
+	 ("\\.css?\\'" . web-mode))
+  :config
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-comment-style 2)
+  )
 
-
-;; ;; web全般
-;; (use-package web-mode
-;;   :ensure t
-;;   :mode (("\\.html?\\'" . web-mode)
-;;          ("\\.js?\\'" . web-mode)
-;; 	 ("\\.css?\\'" . web-mode)
-;; 	 )
-;;   :config
-;;   (setq web-mode-markup-indent-offset 2)
-;;   (setq web-mode-code-indent-offset 2)
-;;   (setq web-mode-comment-style 2)
-;;   )
-
-;; ;; Golang
-;; ;; goへのパス
-;; (add-to-list 'exec-path (expand-file-name "~/local/go/bin/"))
-;; ;; go get で入れたツールへのパス
-;; (add-to-list 'exec-path (expand-file-name "~/.go/bin/"))
-;; (use-package go-mode
-;;   :ensure t
-;;   :config
-;;   (use-package go-eldoc
-;;     :ensure t
-;;     :config
-;;     (add-hook 'go-mode-hook 'go-eldoc-setup))
-;;   (bind-keys :map go-mode-map
-;; 	     ("M-." . godef-jump)
-;; 	     ("M-," . pop-tag-mark))
-;;   (add-hook 'go-mode-hook '(lambda () (setq tab-width 4)))
-;;   (setq gofmt-command "goimports")
-;;   (add-hook 'before-save-hook 'gofmt-before-save)
-;;   (use-package company-go
-;;     :ensure t)
-;;   )
+;; javascript
+(use-package js2-mode
+  :mode (("\\.js?\\'" . js2-mode))
+  :config
+  (setq my-js-mode-indent-num 2)
+  (setq js2-basic-offset my-js-mode-indent-num)
+  (setq js-switch-indent-offset my-js-mode-indent-num))
 
 
 (provide 'init)
