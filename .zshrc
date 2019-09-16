@@ -132,3 +132,5 @@ export LIBGL_ALWAYS_INDIRECT=1
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/haruka/.sdkman"
 [[ -s "/home/haruka/.sdkman/bin/sdkman-init.sh" ]] && source "/home/haruka/.sdkman/bin/sdkman-init.sh"
+
+export LANG=ja_JP.UTF-8

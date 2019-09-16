@@ -26,8 +26,6 @@ done
 
 echo "Apps installed."
 
-eval "./japanese.sh"
-
 eval "./emacs26.sh"
 
 eval "./pyenv.sh"

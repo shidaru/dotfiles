@@ -1,6 +1,6 @@
 # dotfiles
 ## Description
-Dotfiles for WLS and Linux(Debian).
+Dotfiles for WSL and Linux(Debian).
 
 ## Usage
 ```
