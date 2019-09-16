@@ -118,7 +118,6 @@
 (setq require-final-newline t)
 ;; *.~ とかのバックアップファイルを作らない
 (setq make-backup-files nil)
-(setq auto-save-file-name-transforms '((".*" "~/tmp/auto-save/" t)))
 
 ;; recentf
 (defvar recentf-max-saved-items 100) ;; 100ファイルまで履歴保存する
@@ -543,6 +542,11 @@ Otherwise indent whole buffer."
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-comment-style 2)
+  )
+
+(use-package php-mode
+  :mode (("\\.php?\\'" . php-mode))
+
   )
 
 ;; javascript
