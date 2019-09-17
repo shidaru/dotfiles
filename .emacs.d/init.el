@@ -57,16 +57,16 @@
 
 ;; font --
 (create-fontset-from-ascii-font
- "Ricty Diminished-15"
+ "Rounded M+ 1m medium-15"
  nil
- "ricty")
+ "own")
 (set-fontset-font
- "fontset-ricty"
+ "fontset-own"
  'unicode
- "Ricty Diminished-15"
+ "Rounded M+ 1m medium-15"
  nil
  'append)
-(add-to-list 'default-frame-alist '(font . "fontset-ricty"))
+(add-to-list 'default-frame-alist '(font . "fontset-own"))
 
 
 ;;
@@ -391,23 +391,23 @@ Otherwise indent whole buffer."
   (add-hook 'after-init-hook #'global-flycheck-mode)
   )
 
-;; ;; TeX
-;; (use-package yatex
-;;   :ensure t
-;;   :mode (("\\.tex?\\'" . yatex-mode))
-;;   :bind (("C-c C-t" . YaTeX-typeset-menu))
-;;   :config
-;;   ;; variables are declared in yatexlib.el
-;;   (setq YaTeX-inhibit-prefix-letter t)
-;;   ;; local dictionary is NOT needed
-;;   (setq YaTeX-nervous nil)
+;; TeX
+(use-package yatex
+  :mode (("\\.tex?\\'" . yatex-mode))
+  :bind (("C-c C-t" . YaTeX-typeset-menu))
+  :config
+  ;; variables are declared in yatexlib.el
+  (setq YaTeX-inhibit-prefix-letter t)
+  ;; local dictionary is NOT needed
+  (setq YaTeX-nervous nil)
 
-;;   ;; variables are declared in yatex.el
-;;   (setq tex-command "ptex2pdf -l -u")
-;;   (setq bibtex-command "pbibtex")
-;;   (setq tex-pdfview-command "evince")
-;;   (setq YaTeX-simple-messages t)
-;;   (setq YaTeX-skip-default-reader t)
+  ;; variables are declared in yatex.el
+  (setq tex-command "ptex2pdf -l -u")
+  (setq bibtex-command "pbibtex")
+  (setq tex-pdfview-command "evince")
+  (setq YaTeX-simple-messages t)
+  (setq YaTeX-skip-default-reader t)
+  )
 
 ;; ;; org-mode
 ;; (use-package org
@@ -546,7 +546,6 @@ Otherwise indent whole buffer."
 
 (use-package php-mode
   :mode (("\\.php?\\'" . php-mode))
-
   )
 
 ;; javascript
