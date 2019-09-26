@@ -557,6 +557,9 @@ Otherwise indent whole buffer."
   (setq js2-basic-offset my-js-mode-indent-num)
   (setq js-switch-indent-offset my-js-mode-indent-num))
 
+(use-package nim-mode
+  :mode (("\\.nim?\\'" . nim-mode))
+  )
 
 (provide 'init)
 
