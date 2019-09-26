@@ -537,16 +537,17 @@ Otherwise indent whole buffer."
 ;; html, css
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
-	 ("\\.css?\\'" . web-mode))
+	 ("\\.css?\\'" . web-mode)
+	 ("\\.php?\\'" . web-mode))
   :config
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-comment-style 2)
   )
 
-(use-package php-mode
-  :mode (("\\.php?\\'" . php-mode))
-  )
+;; (use-package php-mode
+;;   :mode (("\\.php?\\'" . php-mode))
+;;   )
 
 ;; javascript
 (use-package js2-mode

@@ -91,6 +91,7 @@ alias mv='mv -i'
 alias cdh='cdr -l'
 alias setproxy='source proxy.sh s'
 alias unsetproxy='source proxy.sh u'
+alias cdo='cd /mnt/c/Users/miton/OneDrive/'
 
 function ktc() {
     before=$1
@@ -134,3 +135,6 @@ export SDKMAN_DIR="/home/haruka/.sdkman"
 [[ -s "/home/haruka/.sdkman/bin/sdkman-init.sh" ]] && source "/home/haruka/.sdkman/bin/sdkman-init.sh"
 
 export LANG=ja_JP.UTF-8
+
+export PATH=$HOME/.nimble/bin:$PATH
+
