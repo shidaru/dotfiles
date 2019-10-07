@@ -27,6 +27,11 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize)
+  )
+
 ;;
 ;; Appearance --
 ;;
@@ -245,6 +250,7 @@ Otherwise indent whole buffer."
 
 ;; リージョン範囲を簡単に変更
 (use-package expand-region
+  :defer t
   :bind
   (("C-." . 'er/expand-region)
    ("C-M-." . 'er/contract-region))
@@ -254,6 +260,7 @@ Otherwise indent whole buffer."
 
 ;; 行頭とコードの先頭・行末とコードの末尾を行き来できるようにする
 (use-package mwim
+  :defer t
   :bind
   (("C-a" . mwim-beginning-of-code-or-line)
    ("C-e" . mwim-end-of-code-or-line))
@@ -271,6 +278,7 @@ Otherwise indent whole buffer."
   )
 
 (use-package tramp
+  :defer t
   :straight nil
   :config
   (setq tramp-default-method "scp")
@@ -335,14 +343,19 @@ Otherwise indent whole buffer."
   :demand t
   :after python)
 (use-package cython-mode
+  :defer t
   :mode (("\\.pyx\\'" . cython-mode))
   )
 
 (use-package kotlin-mode
-  :mode (("\\.kt\\'" . kotlin-mode)))
+  :defer t
+  :mode (("\\.kt\\'" . kotlin-mode))
+  :config
+  (setq-default kotlin-tab-width 4))
 
 ;; 定型文挿入
 (use-package yasnippet
+  :defer t
   :diminish yas-minor-mode
   :bind (
 	 ;; 新規スニペットを作成するバッファを用意する
@@ -353,6 +366,7 @@ Otherwise indent whole buffer."
   (yas-global-mode 1)
   )
 (use-package helm-c-yasnippet
+  :defer t
   :bind
   (("C-c y" . helm-yas-complete))
   :config
@@ -360,10 +374,12 @@ Otherwise indent whole buffer."
   (yas-load-directory "~/.emacs.d/snippets/"))
 
 (use-package markdown-mode
+  :defer t
   :mode (("\\md?\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
 (use-package dumb-jump
+  :defer t
   :bind (("M-d" . dumb-jump-go))
   :config
   (setq dumb-jump-mode t)
@@ -379,10 +395,12 @@ Otherwise indent whole buffer."
 
 ;; Dockerfile
 (use-package dockerfile-mode
+  :defer t
   :mode (("\\Dockerfile?\\'" . dockerfile-mode)))
 
 ;; yaml
 (use-package yaml-mode
+  :defer t
   :mode (("\\.yml?\\'" . yaml-mode)))
 
 ;; 構文チェック
@@ -393,6 +411,7 @@ Otherwise indent whole buffer."
 
 ;; TeX
 (use-package yatex
+  :defer t
   :mode (("\\.tex?\\'" . yatex-mode))
   :bind (("C-c C-t" . YaTeX-typeset-menu))
   :config
@@ -409,22 +428,77 @@ Otherwise indent whole buffer."
   (setq YaTeX-skip-default-reader t)
   )
 
-;; ;; org-mode
+
+;; org-mode
+;; straight.elによるorg modeのインストールに先立つ準備
+(require 'subr-x)
+(straight-use-package 'git)
+
+(defun org-git-version ()
+  "The Git version of org-mode.
+Inserted by installing org-mode or when a release is made."
+  (require 'git)
+  (let ((git-repo (expand-file-name
+                   "straight/repos/org/" user-emacs-directory)))
+    (string-trim
+     (git-run "describe"
+              "--match=release\*"
+              "--abbrev=6"
+              "HEAD"))))
+
+(defun org-release ()
+  "The release version of org-mode.
+Inserted by installing org-mode or when a release is made."
+  (require 'git)
+  (let ((git-repo (expand-file-name
+                   "straight/repos/org/" user-emacs-directory)))
+    (string-trim
+     (string-remove-prefix
+      "release_"
+      (git-run "describe"
+               "--match=release\*"
+               "--abbrev=0"
+               "HEAD")))))
+
+(provide 'org-version)
+
+;; 以下Org modeの設定
+(use-package org
+  :mode (("\\.org?\\'" . org-mode))
+  :config
+  (use-package org-bullets
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  (use-package org-re-reveal)
+  (use-package htmlize)
+  (define-key org-mode-map (kbd "C-j") nil)
+  ;;; \hypersetup{...} を出力しない
+  (setq org-latex-with-hyperref nil)
+  ;; そのコード用のモードと同じ色でハイライト表示する
+  (setq org-src-fontify-natively t)
+  ;; Validatのリンクを消す
+  (defvar org-html-validation-link nil)
+  ;; スピードコマンドを有効化する
+  (setq org-use-speed-commands t)
+  )
+
 ;; (use-package org
+;;   :straight nil
 ;;   :mode (("\\.org?\\'" . org-mode))
 ;;   :config
 ;;   (define-key org-mode-map (kbd "C-j") nil)
 ;;   ;;; \hypersetup{...} を出力しない
 ;;   (setq org-latex-with-hyperref nil)
 
+;;   (straight-use-package
+;;    '(org-re-reveal :type git :host gitlab :repo "oer/org-re-reveal"))
+;;   (use-package org-re-reveal
+;;     :mode (("\\.org?\\'" . org-mode)))
+
 ;;   (use-package org-bullets
-;;     :ensure t
 ;;     :config
-;;     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-;;     )
-;;   (use-package htmlize
-;;     :ensure t
-;;     )
+;;     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+;;   (use-package htmlize)
 ;;   ;; そのコード用のモードと同じ色でハイライト表示する
 ;;   (setq org-src-fontify-natively t)
 ;;   ;; Validatのリンクを消す
@@ -443,24 +517,6 @@ Otherwise indent whole buffer."
 ;;      (latex . t)
 ;;      (ditaa . t)
 ;;      ))
-
-;;   (use-package ox-bibtex)
-;;   (use-package org-ref
-;;     :ensure t
-;;     :disabled
-;;     :config
-;;     (setq reftex-default-bibliography '("~/Documents/Research/docs/references.bib"))
-;; 	;;; migemo を有効化
-;;     (push '(migemo) helm-source-bibtex)
-;;     ;; ノート、bib ファイル、PDF のディレクトリなどを設定
-;;     (setq org-ref-default-bibliography "~/Documents/Research/docs/references.bib")
-;; 	;;; helm-bibtex を使う場合は以下の変数も設定しておく
-;;     (setq bibtex-completion-bibliography "~/Documents/Research/docs/references.bib")
-;; 	;;; background が暗い色だとリンクの色が見辛い
-;;     (set-face-foreground 'org-ref-cite-face "White")
-;;     (set-face-foreground 'org-ref-ref-face "Yellow")
-;;     (set-face-foreground 'org-ref-label-face "Cyan")
-;;     )
 
 ;;   (use-package ox-latex
 ;;     :config
@@ -536,6 +592,7 @@ Otherwise indent whole buffer."
 
 ;; html, css
 (use-package web-mode
+  :defer t
   :mode (("\\.html?\\'" . web-mode)
 	 ("\\.css?\\'" . web-mode)
 	 ("\\.php?\\'" . web-mode))
@@ -545,12 +602,9 @@ Otherwise indent whole buffer."
   (setq web-mode-comment-style 2)
   )
 
-;; (use-package php-mode
-;;   :mode (("\\.php?\\'" . php-mode))
-;;   )
-
 ;; javascript
 (use-package js2-mode
+  :defer t
   :mode (("\\.js?\\'" . js2-mode))
   :config
   (setq my-js-mode-indent-num 2)
@@ -558,7 +612,23 @@ Otherwise indent whole buffer."
   (setq js-switch-indent-offset my-js-mode-indent-num))
 
 (use-package nim-mode
+  :defer t
   :mode (("\\.nim?\\'" . nim-mode))
+  )
+
+(let ((envs '("GOROOT" "GOPATH")))
+  (exec-path-from-shell-copy-envs envs))
+(use-package go-mode
+  :defer t
+  :mode (("\\.go?\\'" . go-mode))
+  :init
+  (add-hook 'go-mode-hook (lambda()
+                            (setq indent-tabs-mode nil)
+                            (setq c-basic-offset 4)
+                            (setq tab-width 4)))
+  :config
+  (setq gofmt-command "goimports")
+  (add-hook 'before-save-hook 'gofmt-before-save)
   )
 
 (provide 'init)

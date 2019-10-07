@@ -114,27 +114,27 @@ export PYENV_ROOT=$HOME/.pyenv
 export PATH=$PYENV_ROOT/bin:$PATH
 eval "$(pyenv init -)"
 
+# goenv
+export GOENV_ROOT=$HOME/.goenv
+export PATH=$GOENV_ROOT/bin:$PATH
+eval "$(goenv init -)"
+export GOPATH=$HOME/go
+export PATH=$GOPATH/1.13.0/bin:$PATH
+
 export LESS='-g -i -M -R -S -W -z-4 -x4'
 export LESSOPEN='| /usr/share/source-highlight/src-hilite-lesspipe.sh %s'
 
-export GOROOT=$HOME/local/go
-export GOPATH=$HOME/.go
-export PATH=$GOROOT/bin:$PATH
-
 export BROWSER=$HOME/local/firefox/firefox
-
-alias re="$HOME/local/remacs/bin/remacs"
-#alias emacs="/mnt/d/local/emacs/bin/emacs"
 
 # wsl用Xサーバ設定
 export DISPLAY=:0.0
 export LIBGL_ALWAYS_INDIRECT=1
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/home/haruka/.sdkman"
-[[ -s "/home/haruka/.sdkman/bin/sdkman-init.sh" ]] && source "/home/haruka/.sdkman/bin/sdkman-init.sh"
-
+# 日本語
 export LANG=ja_JP.UTF-8
 
 export PATH=$HOME/.nimble/bin:$PATH
 
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/shidaru/.sdkman"
+[[ -s "/home/shidaru/.sdkman/bin/sdkman-init.sh" ]] && source "/home/shidaru/.sdkman/bin/sdkman-init.sh"
