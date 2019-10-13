@@ -26,11 +26,8 @@
 
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
+(use-package bind-key)
 
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize)
-  )
 
 ;;
 ;; Appearance --
@@ -62,13 +59,13 @@
 
 ;; font --
 (create-fontset-from-ascii-font
- "Rounded M+ 1m medium-15"
+ "Rounded M+ 1m medium-12"
  nil
  "own")
 (set-fontset-font
  "fontset-own"
  'unicode
- "Rounded M+ 1m medium-15"
+ "Rounded M+ 1m medium-12"
  nil
  'append)
 (add-to-list 'default-frame-alist '(font . "fontset-own"))
@@ -616,8 +613,6 @@ Inserted by installing org-mode or when a release is made."
   :mode (("\\.nim?\\'" . nim-mode))
   )
 
-(let ((envs '("GOROOT" "GOPATH")))
-  (exec-path-from-shell-copy-envs envs))
 (use-package go-mode
   :defer t
   :mode (("\\.go?\\'" . go-mode))
