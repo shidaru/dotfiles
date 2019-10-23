@@ -477,6 +477,8 @@ Inserted by installing org-mode or when a release is made."
   (defvar org-html-validation-link nil)
   ;; スピードコマンドを有効化する
   (setq org-use-speed-commands t)
+  (use-package org-tempo
+    :straight nil)
   )
 
 ;; (use-package org

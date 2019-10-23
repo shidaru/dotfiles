@@ -15,6 +15,7 @@ packagelist=(
   "source-highlight"
   "vim"
   "wget"
+  "gawk"
 )
 
 sudo apt update

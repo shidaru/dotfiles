@@ -25,13 +25,43 @@ eval "$(dircolors .dircolors)"
 # 補完候補もLS_COLORSに合わせて色が付くようにする
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
-# history
+# --------------
+# cdr関連
+# --------------
+# cdしたら自動でディレクトリスタックする
+setopt AUTO_PUSHD
+# 同じディレクトリは追加しない
+setopt pushd_ignore_dups
+# スタックサイズ
+DIRSTACKSIZE=100
+# cdr, add-zsh-hook を有効にする
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+add-zsh-hook chpwd chpwd_recent_dirs
+
+# --------------
+# 履歴関連
+# --------------
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-setopt hist_ignore_dups
+# 過去に同じ履歴が存在する場合、古い履歴を削除し重複しない
+setopt hist_ignore_all_dups
 # 同時に起動したzshの間でヒストリを共有する
 setopt share_history
+# コマンド先頭スペースの場合保存しない
+setopt hist_ignore_space
+# ヒストリを呼び出してから実行する間に一旦編集できる状態になる
+setopt hist_verify
+#余分なスペースを削除してヒストリに記録する
+setopt hist_reduce_blanks
+# histryコマンドは残さない
+setopt hist_save_no_dups
+# 古い履歴を削除する必要がある場合、まず重複しているものから削除
+setopt hist_expire_dups_first
+# 補完時にヒストリを自動的に展開する
+setopt hist_expand
+# 履歴をインクリメンタルに追加
+setopt inc_append_history
 
 # cdコマンドを省略して、ディレクトリ名のみの入力で移動
 setopt auto_cd
@@ -138,3 +168,35 @@ export PATH=$HOME/.nimble/bin:$PATH
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/shidaru/.sdkman"
 [[ -s "/home/shidaru/.sdkman/bin/sdkman-init.sh" ]] && source "/home/shidaru/.sdkman/bin/sdkman-init.sh"
+
+umask 022
+setopt NO_BG_NICE
+
+# zplugがなければzplugをインストール後zshを再起動
+if [ ! -e "${HOME}/.zplug/init.zsh" ]; then
+  curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
+fi
+source ${HOME}/.zplug/init.zsh
+zplug 'zsh-users/zsh-autosuggestions'
+zplug 'zsh-users/zsh-syntax-highlighting'
+zplug "peco/peco", as:command, from:gh-r
+zplug "mollifier/anyframe"
+# プラグインがまだインストールされてないならインストールするか聞く
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+# .zplug以下にパスを通す。プラグイン読み込み
+zplug load --verbose
+
+# --------------
+# anyframeの設定
+# --------------
+# anyframeで明示的にpecoを使用するように定義
+zstyle ":anyframe:selector:" use peco
+# C-zでcd履歴検索後移動
+bindkey '^Z' anyframe-widget-cdr
+# C-rでコマンド履歴検索後実行
+bindkey '^R' anyframe-widget-put-history
