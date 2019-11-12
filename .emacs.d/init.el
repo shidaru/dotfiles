@@ -629,6 +629,11 @@ Inserted by installing org-mode or when a release is made."
   (add-hook 'before-save-hook 'gofmt-before-save)
   )
 
+;; shell script
+(setq sh-basic-offset 2)
+(setq sh-indentation 2)
+(setq sh-shell-file "/bin/bash")
+
 (provide 'init)
 
 ;;; init.el ends here
