@@ -169,8 +169,12 @@ export PATH=$HOME/.nimble/bin:$PATH
 export SDKMAN_DIR="/home/shidaru/.sdkman"
 [[ -s "/home/shidaru/.sdkman/bin/sdkman-init.sh" ]] && source "/home/shidaru/.sdkman/bin/sdkman-init.sh"
 
-umask 022
 setopt NO_BG_NICE
+umask 022
+#  Couldn't connect to accessibility bus:
+# Failed to connect to socket /tmp/dbus-xxfluS2Izg: Connection refused
+# みたいなwarningがでた場合の処置
+export NO_AT_BRIDGE=1
 
 # zplugがなければzplugをインストール後zshを再起動
 if [ ! -e "${HOME}/.zplug/init.zsh" ]; then
