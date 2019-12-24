@@ -59,13 +59,13 @@
 
 ;; font --
 (create-fontset-from-ascii-font
- "Rounded M+ 1m medium-12"
+ "Rounded M+ 1m medium-10.5"
  nil
  "own")
 (set-fontset-font
  "fontset-own"
  'unicode
- "Rounded M+ 1m medium-12"
+ "Rounded M+ 1m medium-10.5"
  nil
  'append)
 (add-to-list 'default-frame-alist '(font . "fontset-own"))
