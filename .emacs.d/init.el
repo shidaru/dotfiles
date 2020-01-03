@@ -116,6 +116,26 @@
   (rainbow-delimiters-mode 1)
   (setq rainbow-delimiters-outermost-only-face-count 1)
   )
+(use-package telephone-line
+  :config
+  ;; 左側で表示するコンテンツの設定
+  (setq telephone-line-lhs
+	'((evil   . (telephone-line-evil-tag-segment))
+	  (accent . (telephone-line-vc-segment
+		     telephone-line-erc-modified-channels-segment
+		     telephone-line-process-segment))
+	  (nil    . (telephone-line-minor-mode-segment
+		     telephone-line-buffer-segment))))
+
+  ;; 右側で表示するコンテンツの設定
+  (setq telephone-line-rhs
+	'((nil    . (telephone-line-misc-info-segment))
+	  (accent . (telephone-line-major-mode-segment))
+	  (evil   . (telephone-line-airline-position-segment))))
+
+  ;; Telephone Lineモードを使う設定
+  (telephone-line-mode 1)
+  )
 ;; ファイルの最後に改行を挿入する
 (setq require-final-newline t)
 ;; *.~ とかのバックアップファイルを作らない
