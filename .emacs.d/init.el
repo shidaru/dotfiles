@@ -59,13 +59,13 @@
 
 ;; font --
 (create-fontset-from-ascii-font
- "Rounded M+ 1m medium-10.5"
+ "Rounded M+ 1m medium-12"
  nil
  "own")
 (set-fontset-font
  "fontset-own"
  'unicode
- "Rounded M+ 1m medium-10.5"
+ "Rounded M+ 1m medium-12"
  nil
  'append)
 (add-to-list 'default-frame-alist '(font . "fontset-own"))
@@ -118,20 +118,40 @@
   )
 (use-package telephone-line
   :config
+  ;; set faces
+  (defface level1-active
+    '((t (:foreground "black" :background "SpringGreen" :inherit mode-line))) "")
+  (defface level1-inactive
+    '((t (:foreground "white" :background "grey11" :inherit mode-line-inactive))) "")
+  (defface level2-active
+    '((t (:foreground "black" :background "royal blue" :inherit mode-line))) "")
+  (defface level2-inactive
+    '((t (:foreground "back" :background "grey11" :inherit mode-line-inactive))) "")
+  (defface level3-active
+    '((t (:foreground "gray" :background "dark cyan" :inherit mode-line))) "")
+  (defface level3-inactive
+    '((t (:foreground "white" :background "grey11" :inherit mode-line-inactive))) "")
+
+  (setq telephone-line-faces
+      (append '((level1 . (level1-active . level1-inactive))
+                (level2 . (level2-active . level2-inactive))
+                (level3 . (level3-active . level3-inactive))
+                ) telephone-line-faces)
+      )
+
   ;; 左側で表示するコンテンツの設定
   (setq telephone-line-lhs
-	'((evil   . (telephone-line-evil-tag-segment))
-	  (accent . (telephone-line-vc-segment
+	'((level1 . (telephone-line-major-mode-segment))
+	  (level2 . (telephone-line-vc-segment
 		     telephone-line-erc-modified-channels-segment
 		     telephone-line-process-segment))
-	  (nil    . (telephone-line-minor-mode-segment
-		     telephone-line-buffer-segment))))
+	  (nil    . (telephone-line-buffer-segment))))
 
   ;; 右側で表示するコンテンツの設定
   (setq telephone-line-rhs
 	'((nil    . (telephone-line-misc-info-segment))
-	  (accent . (telephone-line-major-mode-segment))
-	  (evil   . (telephone-line-airline-position-segment))))
+	  (level2 . nil)
+	  (level1   . (telephone-line-airline-position-segment))))
 
   ;; Telephone Lineモードを使う設定
   (telephone-line-mode 1)
