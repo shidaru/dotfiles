@@ -522,6 +522,7 @@ Otherwise indent whole buffer."
   (setq tex-pdfview-command "evince")
   (setq YaTeX-simple-messages t)
   (setq YaTeX-skip-default-reader t)
+  (add-hook 'yatex-mode-hook 'turn-on-reftex)
   )
 
 

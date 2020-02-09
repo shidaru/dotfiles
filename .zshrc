@@ -186,12 +186,12 @@ zplug 'zsh-users/zsh-syntax-highlighting'
 zplug "peco/peco", as:command, from:gh-r
 zplug "mollifier/anyframe"
 # プラグインがまだインストールされてないならインストールするか聞く
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
+# if ! zplug check --verbose; then
+#     printf "Install? [y/N]: "
+#     if read -q; then
+#         echo; zplug install
+#     fi
+# fi
 # .zplug以下にパスを通す。プラグイン読み込み
 zplug load --verbose
 
