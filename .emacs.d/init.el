@@ -363,6 +363,14 @@ Otherwise indent whole buffer."
     (setq tramp-remote-process-environment process-environment))
   )
 
+;; dired
+;; diredを2つのウィンドウで開いている時に、デフォルトの移動orコピー先をもう一方のdiredで開いているディレクトリにする
+(setq dired-dwim-target t)
+;; ディレクトリを再帰的にコピーする
+(setq dired-recursive-copies 'always)
+;; diredバッファでC-sした時にファイル名だけにマッチするように
+(setq dired-isearch-filenames t)
+
 ;;
 ;; Search & Complete --
 ;;
@@ -733,6 +741,11 @@ Inserted by installing org-mode or when a release is made."
 (setq sh-basic-offset 2)
 (setq sh-indentation 2)
 (setq sh-shell-file "/bin/bash")
+
+(use-package csv-mode
+  :defer t
+  :mode (("\\.csv?\\'" . csv-mode))
+  )
 
 (provide 'init)
 
