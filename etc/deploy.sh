@@ -1,12 +1,17 @@
 #!/bin/bash
-# ドットファイルのシンボリックリンクを貼る
+# dotfilesのシンボリックリンクを貼る
 
-for file in `ls -d .[^.]*`; do
-  if [ ! $file = ".gitignore" -o ! $file = ".git" ]; then
-    ln -sfnv ./.dotfiles/$file $HOME/$file
-  fi
-done
+set -Ceuo pipefail
+export LC_ALL=C
+export LANG=C
 
-ln -sfnv ./.dotfiles/bin $HOME/bin
+# for file in `ls -d .[^.]*`; do
+#   if [ ! $file = ".gitignore" -o ! $file = ".git" ]; then
+#     ln -sfnv ./.dotfiles/$file $HOME/$file
+#   fi
+# done
+
+# ln -sfnv ./.dotfiles/bin $HOME/bin
 
 echo "Finish deploy dotfiles."
+echo ""

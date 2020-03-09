@@ -1,0 +1,200 @@
+#!/bin/bash
+# Description: Script for setup development environment.
+# Author: shidaru
+# Date: 2020/03/05
+# Usage: ./setup [OPTION]
+
+# template setting
+set -Ceuo pipefail
+export LC_ALL=C
+export LANG=C
+
+function usage() {
+  echo "This script setup development environment."
+  echo
+  echo "Usage:"
+  echo "  ./$(basename "${BASH_SOURCE[0]}") [OPTION]"
+  echo
+  echo "Options:"
+  echo "  --init, -i"
+  echo "    Initialize environment settings."
+  echo "  --deploy, -d"
+  echo "    Create symlinks to home directory."
+  echo "  --update, -u"
+  echo "    Fetch all changes from remote repository."
+  echo "  --setup, -s"
+  echo "    Run update -> deploy -> init."
+  echo "  --help, -h"
+  echo "    This help."
+}
+
+
+# 色付きの echo
+function cecho() {
+  local color_name color
+  readonly color_name="$1"
+  shift
+  case $color_name in
+    red) color=31 ;;
+    green) color=32 ;;
+    yellow) color=33 ;;
+    blue) color=34 ;;
+    cyan) color=36 ;;
+    *) error_exit "An undefined color was specified." ;;
+  esac
+  printf "\033[${color}m%b\033[m\n" "$*"
+}
+
+# 赤文字でエラーメッセージを表示しつつ終了する
+function error_exit() {
+  {
+    cecho red "[ERROR] $*"
+    echo
+    usage
+  } 1>&2
+  exit 1
+}
+
+# 引数を入れる配列を定義する
+declare -a ARGS=()
+IS_INITIALIZE="false"
+IS_DEPLOY="false"
+IS_UPDATE="false"
+IS_SETUP="false"
+
+function initialize() {
+  echo "Install libraries."
+  eval "./etc/init.sh"
+}
+
+function deploy() {
+  echo "Deploy dotfiles."
+  eval "./etc/deploy.sh"
+}
+
+function update() {
+  echo "Update repository."
+  # git pull origin master
+  echo ""
+}
+
+function setup() {
+  echo "Setup environment."
+  echo ""
+  update
+  deploy
+  initialize
+}
+
+# コマンドラインオプションをパースする
+while (($# > 0)); do
+  case "$1" in
+    --init | -i)
+      IS_INITIALIZE="true"
+      shift
+      ;;
+    --deploy | -d)
+      IS_DEPLOY="true"
+      shift
+      ;;
+    --update | -u)
+      IS_UPDATE="true"
+      shift
+      ;;
+    --setup | -s)
+      IS_SETUP="true"
+      shift
+      ;;
+    --help | -h)
+      usage
+      exit 0
+      ;;
+    --)
+      # ダブルダッシュがあったら以降は引数とみなす
+      shift
+      while (($# > 0)); do
+        ARGS+=("$1")
+        shift
+      done
+      break
+      ;;
+    -*)
+      error_exit "Illegal option -- $1"
+      ;;
+    *)
+      if [[ $1 != "" ]] && [[ ! $1 =~ ^-+ ]]; then
+        ARGS+=("$1")
+      fi
+      shift
+      ;;
+  esac
+done
+
+# 必要に応じて取り出したオプション値や引数を検証する
+if ((${#ARGS[@]} < 0)); then
+  # 引数の数が不足しているためエラー
+  error_exit "Insufficient number of script arguments."
+fi
+
+# スクリプト終了時に呼ばれるハンドラー関数
+function on_exit() {
+  local exit_code=$1
+  # スクリプト終了時の後始末を行う場合はここに書く
+  exit "$exit_code"
+}
+
+# このスクリプト自身のディレクトリに移動する
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+function main() {
+  # スクリプト終了時のハンドラーを登録
+  trap 'on_exit $?' EXIT
+
+  echo $(pwd)
+
+  if [[ $IS_INITIALIZE == "true" ]]; then
+    initialize
+  elif [[ $IS_DEPLOY == "true" ]]; then
+    deploy
+  elif [[ $IS_UPDATE == "true" ]]; then
+    update
+  elif [[ $IS_SETUP == "true" ]]; then
+    setup
+  fi
+}
+
+main
+
+# function install() {
+#   git pull origin master
+#   eval "$scriptDir/init.sh"
+#   eval "$scriptDir/deploy.sh"
+# }
+
+# action=$1
+# if [[ $action == "" ]]; then
+#   echo "init    => Initialize environment settings."
+#   echo "deploy  => Create symlinks to home directory."
+#   echo "update  => Fetch all changes from remote repo."
+#   echo "install => Run update, deploy, init."
+
+# elif [[ $action == "init" ]]; then
+#   echo "Install libraries."
+#   eval "$scriptDir/init.sh"
+
+# elif [[ $action == "deploy" ]]; then
+#   echo "Deploy dotfiles."
+#   eval "$scriptDir/deploy.sh"
+
+# elif [[ $action == "update" ]]; then
+#   echo "Update repo."
+#   git pull origin master
+
+# elif [[ $action == "install" ]]; then
+#   echo "Update => Deploy => init"
+#   install
+
+# else
+#   echo "[ERROR] Undefined option"
+# fi

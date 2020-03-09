@@ -8,7 +8,7 @@ $ git clone https://github.com/shidaru/dotfiles.git .$HOME/.dotfiles
 
 $ cd .dotfiles
 
-$ ./install.sh install
+$ ./setup -s
 ```
 
 ## Author

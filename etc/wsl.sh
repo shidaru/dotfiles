@@ -1,32 +1,39 @@
 #!/bin/bash
 
-echo "Start initialize."
+set -Ceuo pipefail
+export LC_ALL=C
+export LANG=C
 
-packagelist=(
-  "bash-completion"
-  "curl"
-  "dbus-x11"
-  "fonts-ricty-diminished"
-  "genisoimage"
-  "gnome-terminal"
-  "imagemagick"
-  "ntpdate"
-  "openssh-client"
-  "source-highlight"
-  "vim"
-  "wget"
-  "gawk"
-)
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
-sudo apt update
-sudo apt upgrade
+echo "Install libraries."
+echo $(pwd)
 
-for list in ${packagelist[@]}; do
-  sudo apt install -y ${list}
-done
+# packagelist=(
+#   "bash-completion"
+#   "curl"
+#   "dbus-x11"
+#   "fonts-ricty-diminished"
+#   "genisoimage"
+#   "imagemagick"
+#   "ntpdate"
+#   "openssh-client"
+#   "source-highlight"
+#   "vim"
+#   "wget"
+#   "gawk"
+# )
 
-echo "Apps installed."
+# sudo apt update
+# sudo apt upgrade
 
-eval "./emacs26.sh"
+# for list in ${packagelist[@]}; do
+#   sudo apt install -y ${list}
+# done
+
+# echo "Apps installed."
+
+# eval "./emacs26.sh"
 
 eval "./pyenv.sh"
