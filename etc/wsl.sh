@@ -10,30 +10,30 @@ cd "$SCRIPT_DIR"
 echo "Install libraries."
 echo $(pwd)
 
-# packagelist=(
-#   "bash-completion"
-#   "curl"
-#   "dbus-x11"
-#   "fonts-ricty-diminished"
-#   "genisoimage"
-#   "imagemagick"
-#   "ntpdate"
-#   "openssh-client"
-#   "source-highlight"
-#   "vim"
-#   "wget"
-#   "gawk"
-# )
+packagelist=(
+  "bash-completion"
+  "curl"
+  "dbus-x11"
+  "fonts-ricty-diminished"
+  "genisoimage"
+  "imagemagick"
+  "ntpdate"
+  "openssh-client"
+  "source-highlight"
+  "vim"
+  "wget"
+  "gawk"
+)
 
-# sudo apt update
-# sudo apt upgrade
+sudo apt update
+sudo apt upgrade
 
-# for list in ${packagelist[@]}; do
-#   sudo apt install -y ${list}
-# done
+for list in ${packagelist[@]}; do
+  sudo apt install -y ${list}
+done
 
-# echo "Apps installed."
+echo "Apps installed."
 
-# eval "./emacs26.sh"
+eval "./emacs26.sh"
 
 eval "./pyenv.sh"
