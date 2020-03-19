@@ -97,12 +97,21 @@
 (global-auto-revert-mode 1)
 ;; 1行づつスクロールする
 (setq scroll-conservatively 1)
+(use-package smooth-scroll
+  :config
+  (smooth-scroll-mode t)
+  )
 ;; リージョンを色付きにする
 (transient-mark-mode 1)
 ;; 保存時に行末の空白を消す
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;; 行末の空白をハイライト
 (setq-default show-trailing-whitespace t)
+(use-package highlight-symbol
+  :config
+  (setq highlight-symbol-colors '("LightSeaGreen" "HotPink" "SlateBlue1" "DarkOrange" "SpringGreen1" "tan" "DodgerBlue1"))
+  (global-set-key (kbd "C-x C-l") 'highlight-symbol-at-point)
+  )
 ;; 対応する括弧を自動で挿入
 (electric-pair-mode 1)
 ;; カッコの強調
@@ -286,6 +295,40 @@ Otherwise indent whole buffer."
       (indent-region (region-beginning) (region-end))
     (all-indent)))
 (global-set-key (kbd "C-M-\\") 'electric-indent)
+
+(defun region-to-single-quote ()
+  (interactive)
+  (quote-formater "'%s'" "^\\(\"\\).*" ".*\\(\"\\)$"))
+
+(defun region-to-double-quote ()
+  (interactive)
+  (quote-formater "\"%s\"" "^\\('\\).*" ".*\\('\\)$"))
+
+(defun region-to-bracket ()
+  (interactive)
+  (quote-formater "\(%s\)" "^\\(\\[\\).*" ".*\\(\\]\\)$"))
+
+(defun region-to-square-bracket ()
+  (interactive)
+  (quote-formater "\[%s\]" "^\\(\(\\).*" ".*\\(\)\\)$"))
+
+(defun quote-formater (quote-format re-prefix re-suffix)
+  (if mark-active
+      (let* ((region-text (buffer-substring-no-properties (region-beginning) (region-end)))
+             (replace-func (lambda (re target-text)(replace-regexp-in-string re "" target-text nil nil 1)))
+             (text (funcall replace-func re-suffix (funcall replace-func re-prefix region-text))))
+        (delete-region (region-beginning) (region-end))
+        (insert (format quote-format text)))
+    (error "Not Region selection")))
+
+(use-package region-bindings-mode
+  :config
+  (region-bindings-mode-enable)
+  (define-key region-bindings-mode-map (kbd "M-7") 'region-to-single-quote)
+  (define-key region-bindings-mode-map (kbd "M-2") 'region-to-double-quote)
+  (define-key region-bindings-mode-map (kbd "M-8") 'region-to-bracket)
+  (define-key region-bindings-mode-map (kbd "M-[") 'region-to-square-bracket)
+  )
 
 ;;
 ;; Interfaces --
