@@ -58,18 +58,20 @@
 (global-display-line-numbers-mode)
 
 ;; font --
-(create-fontset-from-ascii-font
- "Rounded M+ 1m medium-12"
- nil
- "own")
-(set-fontset-font
- "fontset-own"
- 'unicode
- "Rounded M+ 1m medium-12"
- nil
- 'append)
-(add-to-list 'default-frame-alist '(font . "fontset-own"))
-
+(if (window-system)
+    (progn
+      (create-fontset-from-ascii-font
+       "Rounded M+ 1m medium-12"
+       nil
+       "own")
+      (set-fontset-font
+       "fontset-own"
+       'unicode
+       "Rounded M+ 1m medium-12"
+       nil
+       'append)
+      (add-to-list 'default-frame-alist '(font . "fontset-own"))
+))
 
 ;;
 ;; Basic --
@@ -440,7 +442,7 @@ Otherwise indent whole buffer."
 (use-package helm
   :bind
   (("M-x" . helm-M-x)
-   ("C-;" . helm-mini)
+   ("C-:" . helm-mini)
    ("M-y" . helm-show-kill-ring)
    ("C-x C-r" . helm-recentf))
   :config
