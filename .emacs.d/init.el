@@ -61,13 +61,13 @@
 (if (window-system)
     (progn
       (create-fontset-from-ascii-font
-       "Rounded M+ 1m medium-12"
+       "Ricty-12"
        nil
        "own")
       (set-fontset-font
        "fontset-own"
        'unicode
-       "Rounded M+ 1m medium-12"
+       "Ricty-12"
        nil
        'append)
       (add-to-list 'default-frame-alist '(font . "fontset-own"))
