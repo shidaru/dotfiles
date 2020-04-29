@@ -457,6 +457,7 @@ Otherwise indent whole buffer."
   :config (setq helm-swoop-pre-input-function (lambda () nil)))
 
 (use-package company
+  :disabled t
   :config
   (global-company-mode)
   (define-key company-active-map (kbd "M-n") nil)
@@ -772,6 +773,7 @@ Inserted by installing org-mode or when a release is made."
 (use-package go-mode
   :defer t
   :mode (("\\.go?\\'" . go-mode))
+  :bind (("M-." . godef-jump))
   :init
   (add-hook 'go-mode-hook (lambda()
                             (setq indent-tabs-mode nil)

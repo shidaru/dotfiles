@@ -150,6 +150,8 @@ export PATH=$GOENV_ROOT/bin:$PATH
 eval "$(goenv init -)"
 export PATH=$GOPATH/bin:$PATH
 
+export PATH=$HOME/.nodebrew/current/bin:$PATH
+
 export LESS='-g -i -M -R -S -W -z-4 -x4'
 export LESSOPEN='| /usr/share/source-highlight/src-hilite-lesspipe.sh %s'
 
