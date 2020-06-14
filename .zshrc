@@ -158,7 +158,7 @@ export LESSOPEN='| /usr/share/source-highlight/src-hilite-lesspipe.sh %s'
 export BROWSER=$HOME/local/firefox/firefox
 
 # wsl用Xサーバ設定
-export DISPLAY=:0.0
+export DISPLAY=`grep -oP "(?<=nameserver ).+" /etc/resolv.conf`:0.0
 export LIBGL_ALWAYS_INDIRECT=1
 # 日本語
 export LANG=ja_JP.UTF-8
