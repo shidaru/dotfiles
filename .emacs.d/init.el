@@ -442,7 +442,7 @@ Otherwise indent whole buffer."
 (use-package helm
   :bind
   (("M-x" . helm-M-x)
-   ("C-:" . helm-mini)
+   ("C-;" . helm-mini)
    ("M-y" . helm-show-kill-ring)
    ("C-x C-r" . helm-recentf))
   :config
