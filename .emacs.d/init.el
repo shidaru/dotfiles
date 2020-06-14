@@ -61,13 +61,13 @@
 (if (window-system)
     (progn
       (create-fontset-from-ascii-font
-       "Ricty-12"
+       "Fira Code Medium-10.5"
        nil
        "own")
       (set-fontset-font
        "fontset-own"
        'unicode
-       "Ricty-12"
+       "Fira Code Medium-10.5"
        nil
        'append)
       (add-to-list 'default-frame-alist '(font . "fontset-own"))
@@ -457,6 +457,7 @@ Otherwise indent whole buffer."
   :config (setq helm-swoop-pre-input-function (lambda () nil)))
 
 (use-package company
+  :disabled t
   :config
   (global-company-mode)
   (define-key company-active-map (kbd "M-n") nil)
@@ -747,16 +748,26 @@ Inserted by installing org-mode or when a release is made."
   :defer t
   :mode (("\\.html?\\'" . web-mode)
 	 ("\\.css?\\'" . web-mode)
-	 ("\\.php?\\'" . web-mode))
+	 ("\\.php?\\'" . web-mode)
+	 ("\\.js[x]?$" . web-mode))
   :config
+  ;; 拡張子 .js でもJSX編集モードに
+  (setq web-mode-content-types-alist
+	'(("jsx" . "\\.js[x]?\\'")))
+  (setq web-mode-attr-indent-offset nil)
   (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
+  (setq web-mode-sql-indent-offset 2)
+  (setq indent-tabs-mode nil)
+  (setq tab-width 2)
   (setq web-mode-comment-style 2)
   (setq web-mode-enable-current-element-highlight t)
   )
 
 ;; javascript
 (use-package js2-mode
+  :disabled
   :defer t
   :mode (("\\.js?\\'" . js2-mode))
   :config
@@ -772,6 +783,7 @@ Inserted by installing org-mode or when a release is made."
 (use-package go-mode
   :defer t
   :mode (("\\.go?\\'" . go-mode))
+  :bind (("M-." . godef-jump))
   :init
   (add-hook 'go-mode-hook (lambda()
                             (setq indent-tabs-mode nil)

@@ -14,7 +14,7 @@ packagelist=(
   "bash-completion"
   "curl"
   "dbus-x11"
-  "fonts-ricty-diminished"
+  "fonts-firacode"
   "genisoimage"
   "imagemagick"
   "ntpdate"
@@ -35,5 +35,3 @@ done
 echo "Apps installed."
 
 eval "./emacs26.sh"
-
-eval "./pyenv.sh"

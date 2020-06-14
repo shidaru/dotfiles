@@ -148,8 +148,9 @@ eval "$(pyenv init -)"
 export GOENV_ROOT=$HOME/.goenv
 export PATH=$GOENV_ROOT/bin:$PATH
 eval "$(goenv init -)"
-export GOPATH=$HOME/go
-export PATH=$GOPATH/1.13.0/bin:$PATH
+export PATH=$GOPATH/bin:$PATH
+
+export PATH=$HOME/.nodebrew/current/bin:$PATH
 
 export LESS='-g -i -M -R -S -W -z-4 -x4'
 export LESSOPEN='| /usr/share/source-highlight/src-hilite-lesspipe.sh %s'
@@ -157,13 +158,10 @@ export LESSOPEN='| /usr/share/source-highlight/src-hilite-lesspipe.sh %s'
 export BROWSER=$HOME/local/firefox/firefox
 
 # wsl用Xサーバ設定
-export DISPLAY=:0.0
+export DISPLAY=`grep -oP "(?<=nameserver ).+" /etc/resolv.conf`:0.0
 export LIBGL_ALWAYS_INDIRECT=1
 # 日本語
 export LANG=ja_JP.UTF8
-
-export PATH=$HOME/.nimble/bin:$PATH
-
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/shidaru/.sdkman"
@@ -175,32 +173,3 @@ umask 022
 # Failed to connect to socket /tmp/dbus-xxfluS2Izg: Connection refused
 # みたいなwarningがでた場合の処置
 export NO_AT_BRIDGE=1
-
-# zplugがなければzplugをインストール後zshを再起動
-if [ ! -e "${HOME}/.zplug/init.zsh" ]; then
-  curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
-fi
-source ${HOME}/.zplug/init.zsh
-zplug 'zsh-users/zsh-autosuggestions'
-zplug 'zsh-users/zsh-syntax-highlighting'
-zplug "peco/peco", as:command, from:gh-r
-zplug "mollifier/anyframe"
-# プラグインがまだインストールされてないならインストールするか聞く
-# if ! zplug check --verbose; then
-#     printf "Install? [y/N]: "
-#     if read -q; then
-#         echo; zplug install
-#     fi
-# fi
-# .zplug以下にパスを通す。プラグイン読み込み
-zplug load --verbose
-
-# --------------
-# anyframeの設定
-# --------------
-# anyframeで明示的にpecoを使用するように定義
-zstyle ":anyframe:selector:" use peco
-# C-zでcd履歴検索後移動
-bindkey '^Z' anyframe-widget-cdr
-# C-rでコマンド履歴検索後実行
-bindkey '^R' anyframe-widget-put-history
