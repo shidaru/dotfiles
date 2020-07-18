@@ -35,10 +35,10 @@
 
 ;; theme
 (straight-use-package
- '(zenburn :type git :host github :repo "bbatsov/zenburn-emacs"))
-(use-package zenburn-theme
+ '(flucui :type git :host github :repo "MetroWind/flucui-theme"))
+(use-package flucui-themes
   :config
-  (load-theme 'zenburn t))
+  (load-theme 'flucui-light t))
 
 ;; ツールバー、メニューバーの非表示
 (tool-bar-mode 0)
@@ -190,9 +190,9 @@
   (setq mozc-candidate-style 'echo-area)
   (setq default-input-method "japanese-mozc")
   (add-hook 'input-method-activate-hook
-	    (lambda() (set-cursor-color "pink")))
+	    (lambda() (set-cursor-color "green")))
   (add-hook 'input-method-inactivate-hook
-	    (lambda() (set-cursor-color "black")))
+	    (lambda() (set-cursor-color "orange")))
   (global-set-key (kbd "C-j") 'toggle-input-method)
   (define-key minibuffer-local-map (kbd "C-j") 'toggle-input-method)
   )
@@ -331,6 +331,20 @@ Otherwise indent whole buffer."
   (define-key region-bindings-mode-map (kbd "M-8") 'region-to-bracket)
   (define-key region-bindings-mode-map (kbd "M-[") 'region-to-square-bracket)
   )
+
+(defun revert-buffer-no-confirm (&optional force-reverting)
+  "Interactive call to revert-buffer. Ignoring the auto-save
+ file and not requesting for confirmation. When the current buffer
+ is modified, the command refuses to revert it, unless you specify
+ the optional argument: force-reverting to true."
+  (interactive "P")
+  ;;(message "force-reverting value is %s" force-reverting)
+  (if (or force-reverting (not (buffer-modified-p)))
+      (revert-buffer :ignore-auto :noconfirm)
+    (error "The buffer has been modified")))
+
+;; reload buffer
+(global-set-key (kbd "<f5>") 'revert-buffer-no-confirm)
 
 ;;
 ;; Interfaces --
@@ -792,6 +806,11 @@ Inserted by installing org-mode or when a release is made."
   :config
   (setq gofmt-command "goimports")
   (add-hook 'before-save-hook 'gofmt-before-save)
+  )
+
+(use-package rust-mode
+  :defer t
+  :mode (("\\.rs?\\'" . rust-mode))
   )
 
 ;; shell script
