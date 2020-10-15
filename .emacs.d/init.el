@@ -35,10 +35,10 @@
 
 ;; theme
 (straight-use-package
- '(flucui :type git :host github :repo "MetroWind/flucui-theme"))
-(use-package flucui-themes
+ '(kaolin :type git :host github :repo "ogdenwebb/emacs-kaolin-themes"))
+(use-package kaolin-themes
   :config
-  (load-theme 'flucui-light t))
+  (load-theme 'kaolin-light t))
 
 ;; ツールバー、メニューバーの非表示
 (tool-bar-mode 0)
@@ -61,7 +61,7 @@
 (if (window-system)
     (progn
       (create-fontset-from-ascii-font
-       "Fira Code Medium-10.5"
+       "Fira Code Medium-15"
        nil
        "own")
       (set-fontset-font
@@ -195,6 +195,7 @@
 	    (lambda() (set-cursor-color "orange")))
   (global-set-key (kbd "C-j") 'toggle-input-method)
   (define-key minibuffer-local-map (kbd "C-j") 'toggle-input-method)
+  (setq mozc-leim-title "かな")
   )
 ;; 改行文字の文字列表現
 (set 'eol-mnemonic-dos "(CRLF)")
@@ -489,26 +490,43 @@ Otherwise indent whole buffer."
 ;;
 ;; Development --
 ;;
-
 (use-package f)
-(defun set-pyenv-version-path ()
-  "Automatically activates pyenv version if .python-version file exists."
-  (f-traverse-upwards
-   (lambda (path)
-     (let ((pyenv-version-path (f-expand ".python-version" path)))
-       (if (f-exists? pyenv-version-path)
-           (pyenv-mode-set (s-trim (f-read-text pyenv-version-path 'utf-8))))))))
-(provide 'set-pyenv-version-path)
-(require 'set-pyenv-version-path)
-(add-hook 'find-file-hook 'set-pyenv-version-path)
-(add-to-list 'exec-path "~/.pyenv/shims")
+
+;; パスを引き継ぐ
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
+(use-package quickrun
+  :defer t)
+
+(use-package python-mode
+  :defer t
+  :mode (("\\py?\\'" . python-mode))
+  :config
+  (add-hook 'python-mode 'eldoc-mode)
+  (unbind-key "C-j" python-mode-map)
+  )
 (use-package python-black
   :demand t
-  :after python)
-(use-package cython-mode
-  :defer t
-  :mode (("\\.pyx\\'" . cython-mode))
-  )
+  :after python-mode)
+
+;; (defun set-pyenv-version-path ()
+;;   "Automatically activates pyenv version if .python-version file exists."
+;;   (f-traverse-upwards
+;;    (lambda (path)
+;;      (let ((pyenv-version-path (f-expand ".python-version" path)))
+;;        (if (f-exists? pyenv-version-path)
+;;            (pyenv-mode-set (s-trim (f-read-text pyenv-version-path 'utf-8))))))))
+;; (provide 'set-pyenv-version-path)
+;; (require 'set-pyenv-version-path)
+;; (add-hook 'find-file-hook 'set-pyenv-version-path)
+;; (add-to-list 'exec-path "~/.pyenv/shims")
+
+;; (use-package cython-mode
+;;   :defer t
+;;   :mode (("\\.pyx\\'" . cython-mode))
+;;   )
 
 (use-package kotlin-mode
   :defer t
@@ -521,6 +539,7 @@ Otherwise indent whole buffer."
   :defer t
   :diminish yas-minor-mode
   :bind (
+	 ("C-x y i" . yas-insert-snippet)
 	 ;; 新規スニペットを作成するバッファを用意する
 	 ("C-x y n" . yas-new-snippet)
 	 ;; 既存スニペットを閲覧・編集する
@@ -544,7 +563,6 @@ Otherwise indent whole buffer."
 (straight-use-package
  '(dumb-jump :type git :host github :repo "jacktasia/dumb-jump"))
 (use-package dumb-jump
-  :defer t
   :bind (("M-d" . dumb-jump-go))
   :config
   (setq dumb-jump-mode t)
@@ -595,45 +613,13 @@ Otherwise indent whole buffer."
 
 
 ;; org-mode
-;; straight.elによるorg modeのインストールに先立つ準備
-(require 'subr-x)
-(straight-use-package 'git)
-
-(defun org-git-version ()
-  "The Git version of org-mode.
-Inserted by installing org-mode or when a release is made."
-  (require 'git)
-  (let ((git-repo (expand-file-name
-                   "straight/repos/org/" user-emacs-directory)))
-    (string-trim
-     (git-run "describe"
-              "--match=release\*"
-              "--abbrev=6"
-              "HEAD"))))
-
-(defun org-release ()
-  "The release version of org-mode.
-Inserted by installing org-mode or when a release is made."
-  (require 'git)
-  (let ((git-repo (expand-file-name
-                   "straight/repos/org/" user-emacs-directory)))
-    (string-trim
-     (string-remove-prefix
-      "release_"
-      (git-run "describe"
-               "--match=release\*"
-               "--abbrev=0"
-               "HEAD")))))
-
-(provide 'org-version)
-
-;; 以下Org modeの設定
 (use-package org
+  :defer t
   :mode (("\\.org?\\'" . org-mode))
   :config
   (use-package org-bullets
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
   (use-package org-re-reveal)
   (use-package htmlize)
   (define-key org-mode-map (kbd "C-j") nil)
