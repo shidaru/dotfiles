@@ -347,6 +347,11 @@ Otherwise indent whole buffer."
 ;; reload buffer
 (global-set-key (kbd "<f5>") 'revert-buffer-no-confirm)
 
+;; 全バッファを閉じる
+(defun close-all-bufferes ()
+  (interactive)
+  (mapc 'kill-buffer (buffer-list)))
+
 ;;
 ;; Interfaces --
 ;;
@@ -502,7 +507,7 @@ Otherwise indent whole buffer."
 
 (use-package python-mode
   :defer t
-  :mode (("\\py?\\'" . python-mode))
+  :mode (("\\.py?\\'" . python-mode))
   :config
   (add-hook 'python-mode 'eldoc-mode)
   (unbind-key "C-j" python-mode-map)
@@ -588,7 +593,10 @@ Otherwise indent whole buffer."
 ;; 構文チェック
 (use-package flycheck
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode)
+  ;; (add-hook 'after-init-hook #'global-flycheck-mode)
+  (when (locate-library "flycheck-irony")
+    (flycheck-irony-setup))
+  (global-flycheck-mode t)
   )
 
 ;; TeX
@@ -742,6 +750,22 @@ Otherwise indent whole buffer."
 ;;     )
 ;;   )
 
+(use-package lsp-mode
+  :hook (prog-major-mode . lsp-prog-major-mode-enable)
+  :commands lsp
+  :config
+  (setq lsp-enable-indentation nil)
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-document-sync-method 2)
+  (setq lsp-inhibit-message t)
+  (setq lsp-message-project-root-warning t)
+  (setq create-lockfiles nil)
+  )
+
+(use-package lsp-ui
+  :commands
+  lsp-ui-mode
+  )
 
 ;; html, css
 (use-package web-mode
