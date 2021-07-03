@@ -353,12 +353,12 @@ Otherwise indent whole buffer."
 (use-package neotree
   :config
   ;; 隠しファイルをデフォルトで表示
-  (setq neo-show-hidden-files t)
+  (defvar neo-show-hidden-files t)
   ;; cotrol + q でneotreeを起動
   (global-set-key "\C-q" 'neotree-toggle)
-  (setq neo-theme 'ascii)
-  (setq neo-persist-show t) ;; delete-other-window で neotree ウィンドウを消さない
-  (setq neo-smart-open t) ;; neotree ウィンドウを表示する毎に current file のあるディレクトリを表示する
+  (defvar neo-theme 'ascii)
+  (defvar neo-persist-show t) ;; delete-other-window で neotree ウィンドウを消さない
+  (defvar neo-smart-open t) ;; neotree ウィンドウを表示する毎に current file のあるディレクトリを表示する
   )
 
 ;; 同名ファイルのバッファ名の識別文字列を変更する
@@ -378,7 +378,7 @@ Otherwise indent whole buffer."
   )
 (use-package undohist
   :config
-  (setq undohist-ignored-files '("/tmp" "COMMIT_EDITMSG" "/EDITMSG" "/straignt"))
+  (defvar undohist-ignored-files '("/tmp" "COMMIT_EDITMSG" "/EDITMSG" "/straignt"))
   (undohist-initialize)
   )
 
