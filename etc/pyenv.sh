@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# エラーになった際に止める: e
+# 未定義変数をエラーにする: u
+# 実行コマンドを標準エラー出力に出す: x
+set -eux
+
 echo "Ready to pyenv."
 
 git clone https://github.com/pyenv/pyenv.git $HOME/.pyenv
