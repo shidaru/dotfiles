@@ -25,7 +25,7 @@ source $HOME/.bashrc
 
 INSTALLED_VERSION=$(python -V | awk '{print $2}')
 
-if [[ ${NEWER} != ${INSTALLED_VERSION} ]]; then
+if [[ ${VERSION} != ${INSTALLED_VERSION} ]]; then
     echo "Install is failed."
     echo
     exit 1

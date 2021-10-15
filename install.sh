@@ -25,9 +25,12 @@ if [ ! -d ${DOT_DIR} ]; then
         echo "curl or wget or git required."
         exit 1
     fi
-    tar -zxvf main.tar.gz
-    rm -rf main.tar.gz
-    mv -f dotfiles-main "${DOT_DIR}"
+
+    if [ -d main.tar.gz ]; then
+        tar -zxvf main.tar.gz
+        rm -rf main.tar.gz
+        mv -f dotfiles-main "${DOT_DIR}"
+    fi
 fi
 
 cd ${DOT_DIR}

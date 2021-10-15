@@ -31,6 +31,3 @@ done
 echo "Apps installed."
 echo
 
-echo "Login shell changes to zsh."
-echo
-chsh -s $(which zsh)
