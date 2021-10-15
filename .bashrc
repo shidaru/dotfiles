@@ -177,18 +177,12 @@ function cdl {
 }
 
 # prompt
-# export PS1='$(git-ps)\n\[\e[1;32m\]\u\[\e[1;37m\]@\[\e[1;34m\]\h \[\e[1;37m\]\w \d\[\e[m\]\n\\$ '
-# Git
-if [ -f $HOME/bin/git-completion.bash -a -f $HOME/bin/git-prompt.sh ]; then
-  source $HOME/bin/git-completion.bash
-  GIT_PS1_SHOWDIRTYSTATE=1
-  source $HOME/bin/git-prompt.sh
-  PS1='\[\e[1;32m\]\u\[\e[1;37m\]@\[\e[1;34m\]\h \[\e[1;37m\]\w$(__git_ps1 " (%s)")\n\\$ '
-fi
+export PS1="\[\e[1;34m\]\u\[\e[m\]@\[\e[1;32m\]\h \[\e[m\]\W \\$ "
 
 #pyenv
 export PYENV_ROOT=$HOME/.pyenv
 export PATH=$PYENV_ROOT/bin:$PATH
+export PATH=$PYENV_ROOT/shims:$PATH
 eval "$(pyenv init -)"
 
 export DISPLAY=:0
