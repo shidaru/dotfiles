@@ -6,7 +6,7 @@ echo "Install Docker!"
 echo
 
 # 公式の手順でインストールしていく
-sudo apt-get remove docker docker-engine docker.io containerd runc
+#sudo apt-get remove docker docker-engine docker.io containerd runc
 
 sudo apt-get update
 
@@ -32,6 +32,7 @@ fi
 sudo usermod -aG docker shidaru
 
 echo "Installed Docker!!"
+echo 
 
 echo "Please logout from shell."
 echo

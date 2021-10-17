@@ -7,6 +7,18 @@
 ;;; Code:
 (require 'cl)
 
+(require 'package)
+(package-initialize)
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+	("melpa" . "http://melpa.org/packages/")
+	("org" . "http://orgmode.org/elpa/")))
+(unless package-archive-contents
+  (package-refresh-contents))
+(when (not (package-installed-p 'use-package))
+  (package-install 'use-package))
+(require 'use-package)
+
 ;; C-hでBackSpace
 (keyboard-translate ?\C-h ?\C-?)
 
@@ -45,7 +57,11 @@
        nil
        'append)
       (add-to-list 'default-frame-alist '(font . "fontset-own"))
-))
+      ))
+
+;; color-theme
+(load-theme 'snow t t)
+(enable-theme 'snow)
 
 ;;
 ;; Basic --
@@ -74,6 +90,7 @@
 ;; 1行づつスクロールする
 (setq scroll-conservatively 1)
 (use-package smooth-scroll
+  :ensure t
   :config
   (smooth-scroll-mode t)
   )
@@ -84,6 +101,7 @@
 ;; 行末の空白をハイライト
 (setq-default show-trailing-whitespace t)
 (use-package highlight-symbol
+  :ensure t
   :config
   (setq highlight-symbol-colors '("LightSeaGreen" "HotPink" "SlateBlue1" "DarkOrange" "SpringGreen1" "tan" "DodgerBlue1"))
   (global-set-key (kbd "C-x C-l") 'highlight-symbol-at-point)
@@ -94,6 +112,7 @@
 (show-paren-mode t)
 ;; カッコの色付け
 (use-package rainbow-delimiters
+  :ensure t
   :config
   (use-package cl-lib)
   (use-package color)
@@ -102,6 +121,7 @@
   (setq rainbow-delimiters-outermost-only-face-count 1)
   )
 (use-package telephone-line
+  :ensure t
   :config
   ;; set faces
   (defface level1-active
@@ -160,6 +180,7 @@
 (set-default-coding-systems 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (use-package mozc
+  :ensure t
   :config
   (setq mozc-candidate-style 'echo-area)
   (setq default-input-method "japanese-mozc")
@@ -298,6 +319,7 @@ Otherwise indent whole buffer."
     (error "Not Region selection")))
 
 (use-package region-bindings-mode
+  :ensure t
   :config
   (region-bindings-mode-enable)
   (define-key region-bindings-mode-map (kbd "M-7") 'region-to-single-quote)
@@ -325,6 +347,7 @@ Otherwise indent whole buffer."
 ;;
 
 (use-package neotree
+  :ensure t
   :config
   ;; 隠しファイルをデフォルトで表示
   (defvar neo-show-hidden-files t)
@@ -343,6 +366,7 @@ Otherwise indent whole buffer."
 
 ;; 履歴
 (use-package undo-tree
+  :ensure t
   :diminish
   (undo-tree-mode)
   :config
@@ -350,6 +374,7 @@ Otherwise indent whole buffer."
   (global-set-key (kbd "M-/") 'undo-tree-redo)
   )
 (use-package undohist
+  :ensure t
   :config
   (defvar undohist-ignored-files '("/tmp" "COMMIT_EDITMSG" "/EDITMSG" "/straignt"))
   (undohist-initialize)
@@ -357,6 +382,7 @@ Otherwise indent whole buffer."
 
 ;; リージョン範囲を簡単に変更
 (use-package expand-region
+  :ensure t
   :defer t
   :bind
   (("C-." . 'er/expand-region)
@@ -367,6 +393,7 @@ Otherwise indent whole buffer."
 
 ;; 行頭とコードの先頭・行末とコードの末尾を行き来できるようにする
 (use-package mwim
+  :ensure t
   :defer t
   :bind
   (("C-a" . mwim-beginning-of-code-or-line)
@@ -380,6 +407,7 @@ Otherwise indent whole buffer."
 
 ;; comment
 (use-package comment-dwim-2
+  :ensure t
   :config
   (global-set-key (kbd "M-;") 'comment-dwim-2)
   )
@@ -408,6 +436,7 @@ Otherwise indent whole buffer."
 
 ;; ローマ字検索
 (use-package migemo
+  :ensure t
   :config
   (setq migemo-command "/usr/bin/cmigemo")
   (setq migemo-options '("-q" "--emacs"))
@@ -421,6 +450,7 @@ Otherwise indent whole buffer."
   )
 
 (use-package anzu
+  :ensure t
   :config
   (global-anzu-mode +1)
   )
@@ -443,25 +473,25 @@ Otherwise indent whole buffer."
 ;;   :config (setq helm-swoop-pre-input-function (lambda () nil)))
 
 ;; 定型文挿入
-(use-package yasnippet
-  :ensure t
-  :defer t
-  :diminish yas-minor-mode
-  :bind (
-	 ;; 新規スニペットを作成するバッファを用意する
-	 ("C-x y n" . yas-new-snippet)
-	 ;; 既存スニペットを閲覧・編集する
-	 ("C-x y v" . yas-visit-snippet-file))
-  :init
-  (yas-global-mode 1)
-  :custom
-  (yas-snippet-dirs . '("~/.emacs.d/snippets"))
-  )
+;; (use-package yasnippet
+;;   :ensure t
+;;   :defer t
+;;   :diminish yas-minor-mode
+;;   :bind (
+;; 	 ;; 新規スニペットを作成するバッファを用意する
+;; 	 ("C-x y n" . yas-new-snippet)
+;; 	 ;; 既存スニペットを閲覧・編集する
+;; 	 ("C-x y v" . yas-visit-snippet-file))
+;;   :init
+;;   (yas-global-mode 1)
+;;   :custom
+;;   (yas-snippet-dirs . '("~/.emacs.d/snippets"))
+;;   )
 
 (use-package company
   :ensure t
   :defer t
-  :defvar company-backends
+  ;; :defvar company-backends
   :init
   (global-company-mode)
   :config
@@ -482,6 +512,7 @@ Otherwise indent whole buffer."
 ;;
 
 (use-package python-black
+  :ensure t
   :demand t
   :after python)
 
@@ -526,6 +557,7 @@ Otherwise indent whole buffer."
 
 ;; 構文チェック
 (use-package flycheck
+  :ensure t
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   )
@@ -556,10 +588,11 @@ Otherwise indent whole buffer."
   :mode (("\\.org?\\'" . org-mode))
   :config
   (use-package org-bullets
-  :config
+    :ensure t
+    :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-  (use-package org-re-reveal)
-  (use-package htmlize)
+  ;; (use-package org-re-reveal)
+  ;; (use-package htmlize)
   (define-key org-mode-map (kbd "C-j") nil)
   ;;; \hypersetup{...} を出力しない
   (setq org-latex-with-hyperref nil)
@@ -569,7 +602,7 @@ Otherwise indent whole buffer."
   (defvar org-html-validation-link nil)
   ;; スピードコマンドを有効化する
   (setq org-use-speed-commands t)
-  (use-package org-tempo)
+  ;; (use-package org-tempo)
   )
 
 ;; (use-package org
@@ -703,9 +736,9 @@ Otherwise indent whole buffer."
   )
 
 ;; shell script
-(setq sh-basic-offset 2)
-(setq sh-indentation 2)
-(setq sh-shell-file "/bin/bash")
+(defvar sh-basic-offset 2)
+(defvar sh-indentation 2)
+(defvar sh-shell-file "/bin/bash")
 
 (use-package csv-mode
   :defer t
@@ -715,3 +748,15 @@ Otherwise indent whole buffer."
 (provide 'init)
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (yasnippet use-package))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
