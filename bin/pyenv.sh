@@ -33,5 +33,7 @@ fi
 
 python -m pip install --upgrade pip
 
+python -m pip install pipenv
+
 echo "all ready pyenv."
 echo
