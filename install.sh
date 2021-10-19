@@ -7,7 +7,8 @@ export LANG=C
 
 DOT_DIR="${HOME}/dotfiles"
 REPOSITORY="https://github.com/shidaru/dotfiles"
-TARBALL="${REPOSITORY}/archive/main.tar.gz"
+TARBALL="${REPOSITORY}/tarball/main"
+EXPANDED="main.tar.gz"
 
 has() {
     type "$1" > /dev/null 2>&1
@@ -15,21 +16,22 @@ has() {
 
 if [ ! -d ${DOT_DIR} ]; then
     if has "git"; then
-        git clone ${REPOSITORY}.git ${DOT_DIR}
+      git clone ${REPOSITORY}.git ${DOT_DIR}
 
     elif has "curl"; then
-        curl -L ${TARBALL} -o main.tar.gz
+      curl -L ${TARBALL} -o ${EXPANDED}
+
     elif has "wget"; then
-        wget ${TARBALL}
+      wget ${TARBALL} -O ${EXPANDED}
+
     else
-        echo "curl or wget or git required."
-        exit 1
+      echo "curl or wget or git required."
+      exit 1
     fi
 
-    if [ -d main.tar.gz ]; then
-        tar -zxvf main.tar.gz
-        rm -rf main.tar.gz
-        mv -f dotfiles-main "${DOT_DIR}"
+    if [ -d ${EXPANDED} ]; then
+      mkdir ${DOT_DIR} && tar zxf ${EXPANDED} -C ${DOT_DIR} --strip-components 1
+      rm -rf ${EXPANDED}
     fi
 fi
 
@@ -42,3 +44,6 @@ cd ${DOT_DIR}/bin
 ./init.sh
 
 ./docker.sh
+
+echo "Finished Initialize Environment!!"
+echo
